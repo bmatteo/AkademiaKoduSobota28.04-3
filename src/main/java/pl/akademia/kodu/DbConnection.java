@@ -49,7 +49,7 @@ public class DbConnection {
 
             ResultSet resultSet = s.executeQuery(sqlSelect);
             while (resultSet.next()) {
-                if (DigestUtils.md5(pass).equals(resultSet.getString("password"))){
+                if (DigestUtils.md5Hex(pass).equals(resultSet.getString("password"))){
                     return true;
                 } else {
                     return false;
