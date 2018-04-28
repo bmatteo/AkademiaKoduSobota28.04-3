@@ -1,9 +1,8 @@
 package pl.akademia.kodu;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import org.apache.commons.codec.digest.DigestUtils;
+
+import java.sql.*;
 
 public class DbConnection {
 
@@ -39,6 +38,36 @@ public class DbConnection {
             preparedStatement.executeUpdate();
         } catch (SQLException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public static boolean authenticate(String login, String pass) {
+        try {
+            String sqlSelect = "SELECT password from user WHERE login = '" + login + "';";
+
+            Statement s = connect.createStatement();
+
+            ResultSet resultSet = s.executeQuery(sqlSelect);
+            while (resultSet.next()) {
+                if (DigestUtils.md5(pass).equals(resultSet.getString("password"))){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            return false;
+
+            /*PreparedStatement preparedStatement = connect.prepareStatement(sqlInsert);
+
+            preparedStatement.setString(1, user.getLogin());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setString(3, user.getName());
+            preparedStatement.setString(4, user.getSurname());
+
+            preparedStatement.executeUpdate();*/
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            return false;
         }
     }
 }
